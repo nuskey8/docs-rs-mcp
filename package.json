@@ -1,6 +1,6 @@
 {
   "name": "@nuskey8/docs-rs-mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An MCP server that enables searching for Rust crates and their documentation from crates.io and docs.rs.",
   "main": "index.ts",
   "scripts": {

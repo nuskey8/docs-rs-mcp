@@ -31,7 +31,7 @@ class DocsRsMcpServer {
         this.server = new Server(
             {
                 name: "docs-rs",
-                version: "1.0.0",
+                version: "1.0.1",
             },
             {
                 capabilities: {
