@@ -97,15 +97,11 @@ class DocsRsMcpServer {
                                     type: "string",
                                     description: "Name of the crate",
                                 },
-                                item_name: {
-                                    type: "string",
-                                    description: "Name of the item to get documentation for",
-                                },
                                 item_type: {
                                     type: "string",
                                     description: "Type of item: 'module' for modules, 'struct', 'trait', 'enum', 'type', 'fn', etc.",
                                 },
-                                full_path: {
+                                item_path: {
                                     type: "string",
                                     description: "The full path of the item, including the module name (e.g. wasmtime::component::Component)",
                                 },
@@ -114,12 +110,12 @@ class DocsRsMcpServer {
                                     description: "Specific version (optional, defaults to latest)",
                                 },
                             },
-                            required: ["crate_name", "item_name", "item_type", "full_path"],
+                            required: ["crate_name", "item_type", "item_path"],
                         },
                     },
                     {
                         name: "docs_rs_search_in_crate",
-                        description: "Search for traits, structs, methods, etc. from the crate's all.html page. To get a module, use docs_rs_item instead.",
+                        description: "Search for traits, structs, methods, etc. from the crate's all.html page. To get a module, use docs_rs_get_item instead.",
                         inputSchema: {
                             type: "object",
                             properties: {
@@ -256,16 +252,19 @@ class DocsRsMcpServer {
     }
 
     private async getItem(args: any) {
-        const { crate_name, item_name, item_type, full_path, version = "latest" } = args;
+        const { crate_name, item_type, item_path, version = "latest" } = args;
+
+        const item_name = item_path.split("::").pop();
 
         try {
             let url: string;
 
             if (item_type === "module") {
-                url = `https://docs.rs/${crate_name}/${version}/${full_path.replaceAll("::", "/")}/index.html`;
+                url = `https://docs.rs/${crate_name}/${version}/${item_path.replaceAll("::", "/")}/index.html`;
             } else {
-                const p = full_path.replaceAll("::", "/");
-                url = `https://docs.rs/${crate_name}/${version}/${p.replaceAll("::", "/").substring(0, p.length - item_name.length - 1)}/${item_type}.${item_name}.html`;
+                const pathParts = item_path.split("::");
+                const modulePath = pathParts.slice(0, -1).join("/");
+                url = `https://docs.rs/${crate_name}/${version}/${modulePath}/${item_type}.${item_name}.html`;
             }
 
             const response = await axios.get<string>(url);
@@ -295,7 +294,7 @@ class DocsRsMcpServer {
             }
 
             if (!contentHtml) {
-                const fullItemName = full_path ? `${crate_name}::${full_path}::${item_name}` : `${crate_name}::${item_name}`;
+                const fullItemName = item_path;
                 return {
                     content: [
                         {
@@ -308,7 +307,7 @@ class DocsRsMcpServer {
 
             const markdownContent = turndownService.turndown(contentHtml);
 
-            const fullItemName = full_path ? `${crate_name}::${full_path}::${item_name}` : `${crate_name}::${item_name}`;
+            const fullItemName = item_path;
             return {
                 content: [
                     {
@@ -318,7 +317,7 @@ class DocsRsMcpServer {
                 ],
             };
         } catch (error) {
-            const fullItemName = full_path ? `${crate_name}::${full_path}::${item_name}` : `${crate_name}::${item_name}`;
+            const fullItemName = item_path;
             throw new Error(`Failed to get item documentation for ${fullItemName}: ${error}`);
         }
     }
