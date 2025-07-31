@@ -1,0 +1,40 @@
+{
+  "name": "@nuskey8/docs-rs-mcp",
+  "version": "1.0.0",
+  "description": "An MCP server that enables searching for Rust crates and their documentation from crates.io and docs.rs.",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc && chmod 755 build/index.js",
+    "start": "tsc && chmod 755 build/index.js && node build/index.js"
+  },
+  "bin": {
+    "docs-rs-mcp": "build/index.js"
+  },
+  "files": [
+    "build"
+  ],
+  "keywords": [],
+  "author": "nuskey8",
+  "license": "MIT",
+  "type": "commonjs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nuskey8/docs-rs-mcp.git"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.13.2",
+    "@types/axios": "^0.9.36",
+    "@types/cheerio": "^0.22.35",
+    "@types/turndown": "^5.0.5",
+    "axios": "^1.11.0",
+    "cheerio": "^1.1.2",
+    "turndown": "^7.2.0",
+    "zod": "^3.25.67"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.7",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  }
+}
