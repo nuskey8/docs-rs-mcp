@@ -3,6 +3,10 @@ An MCP server that enables searching for Rust crates and their documentation fro
 
 English | [日本語](./README_JA.md)
 
+<a href="https://glama.ai/mcp/servers/@nuskey8/docs-rs-mcp">
+  <img width="380" height="200" src="https://glama.ai/mcp/servers/@nuskey8/docs-rs-mcp/badge" alt="docs.rs MCP server" />
+</a>
+
 ## Overview
 
 docs.rs MCP is an MCP server that searches the Rust crate documentation site [docs.rs](https://docs.rs). By using this, AI Agents can search for required crates and obtain the latest documentation as needed.
